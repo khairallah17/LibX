@@ -64,19 +64,60 @@ public class LoanServiceImpl implements LoanService{
             return savedLoanDTO;
         }
 
-        @Override
+
+    public LoanDTO updateLoan(Long loanId, LoanDTO loanDTO) {
+        // Fetch the loan to be updated
+        Loan existingLoan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new RuntimeException("Loan not found with ID: " + loanId));
+
+        // Update fields
+        existingLoan.setLoanDate(loanDTO.getLoanDate());
+        existingLoan.setReturnDate(loanDTO.getReturnDate());
+
+        // Save the updated loan
+        Loan updatedLoan = loanRepository.save(existingLoan);
+
+        // Map to DTO and return
+        return loanMapper.toDto(updatedLoan);
+    }
+
+
+    @Override
         public LoanDTO getLoan(Long loanId) {
             Loan loan = loanRepository.findById(loanId)
                     .orElseThrow(() -> new RuntimeException("Loan not found with ID: " + loanId));
-            loan.setReturnDate(LocalDate.now());
-            Loan updatedLoan = loanRepository.save(loan);
-            return loanMapper.toDto(updatedLoan);
+
+            // Fetch user and book details
+            UserDTO user = fetchUser(loan.getUserId());
+            BookDTO book = fetchBook(loan.getBookId());
+
+            // Map to LoanDTO
+            LoanDTO loanDTO = loanMapper.toDto(loan);
+
+            // Populate additional details
+            loanDTO.setUserName(user.getName());
+            loanDTO.setBookTitle(book.getTitle());
+
+            return loanDTO;
         }
 
         @Override
         public List<LoanDTO> getLoansByUser(Long userId) {
             return loanRepository.findByUserId(userId).stream()
-                    .map(loanMapper::toDto)
+                    .map(loan -> {
+                        // Fetch user and book details
+                        UserDTO user = fetchUser(loan.getUserId());
+                        BookDTO book = fetchBook(loan.getBookId());
+
+                        // Map loan to LoanDTO
+                        LoanDTO loanDTO = loanMapper.toDto(loan);
+
+                        // Populate additional details
+                        loanDTO.setUserName(user.getName());
+                        loanDTO.setBookTitle(book.getTitle());
+
+                        return loanDTO;
+                    })
                     .collect(Collectors.toList());
         }
 

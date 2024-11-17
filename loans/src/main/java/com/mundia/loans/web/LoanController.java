@@ -21,15 +21,19 @@ public class LoanController {
         return loanService.createLoan(loanDTO.getUserId(),loanDTO.getBookId(),loanDTO);
     }
 
-    @PutMapping("/{loanId}/return")
-    public ResponseEntity<LoanDTO> returnLoan(@PathVariable Long loanId) {
-        LoanDTO loanDTO = loanService.getLoan(loanId);
-        return ResponseEntity.ok(loanDTO);
+    @PutMapping("/{loanId}")
+    public ResponseEntity<LoanDTO> updateLoan(@PathVariable Long loanId, @RequestBody LoanDTO loanDTO) {
+        return ResponseEntity.ok(loanService.updateLoan(loanId, loanDTO));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<LoanDTO>> getAllLoans() {
+        return ResponseEntity.ok(loanService.getAllLoans());
     }
 
     @GetMapping("/user/{userId}")
-    public List<LoanDTO> getLoansByUser(@PathVariable Long userId) {
-        return loanService.getLoansByUser(userId);
+    public ResponseEntity<List<LoanDTO>> getLoansByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(loanService.getLoansByUser(userId));
     }
 
     @GetMapping("/active")
@@ -37,8 +41,9 @@ public class LoanController {
         return ResponseEntity.ok(loanService.getActiveLoans());
     }
 
-    @GetMapping
-    public ResponseEntity<List<LoanDTO>> getAllLoans() {
-        return ResponseEntity.ok(loanService.getAllLoans());
+    @GetMapping("/{loanId}")
+    public ResponseEntity<LoanDTO> getLoan(@PathVariable Long loanId) {
+        return ResponseEntity.ok(loanService.getLoan(loanId));
     }
+
 }

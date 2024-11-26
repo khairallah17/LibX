@@ -9,6 +9,8 @@
         <option value="$PROJECT_DIR$/Users/pom.xml" />
         <option value="$PROJECT_DIR$/eureka/pom.xml" />
         <option value="$PROJECT_DIR$/api-gateway/pom.xml" />
+        <option value="$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-dependencies/3.3.4/spring-boot-dependencies-3.3.4.pom" />
+        <option value="$PROJECT_DIR$/tp1sec/pom.xml" />
       </list>
     </option>
   </component>
